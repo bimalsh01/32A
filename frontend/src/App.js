@@ -12,6 +12,7 @@ import Navbar from './components/Navbar';
 // Toast Config
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import AdminDashboard from './pages/admin/admin_dashboard/AdminDashboard';
 
 // Task create for login and register
 function App() {
@@ -23,6 +24,10 @@ function App() {
         <Route path='/' element={<Homepage/>} />
         <Route path='/register' element={<Register/>} />
         <Route path='/login' element={<Login/>} />
+
+        {/* Admin routes */}
+        <Route path='/admin/dashboard' element={<AdminDashboard/>} />
+
       </Routes>
     </Router>
   );
