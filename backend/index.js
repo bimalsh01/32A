@@ -23,6 +23,9 @@ app.use(express.json())
 // Config form data
 app.use(acceptFormData())
 
+// Make a static public folder
+app.use(express.static("./public"))
+
 
 // dotenv Configuration
 dotenv.config()

@@ -1,6 +1,30 @@
-import React, {useState} from 'react'
+import React, { useState, useEffect } from 'react'
+import { createProductApi, getAllProducts } from '../../../apis/Api'
+import { toast } from 'react-toastify'
 
 const AdminDashboard = () => {
+
+    // 1. State for all fetched products
+    const [products, setProducts] = useState([]) // array
+
+    // 2. Call API initially (Page Load) - Set all fetch products to state (1)
+    useEffect(() => {
+
+        getAllProducts().then((res) => {
+            // response : res.data.products (All Products)
+            setProducts(res.data.products)
+
+        }).catch((error) => {
+            console.log(error)
+        })
+
+    }, [])
+    console.log(products)
+
+
+
+
+
 
     // State for input fields
     const [productName, setProductName] = useState('')
@@ -22,13 +46,43 @@ const AdminDashboard = () => {
     // handle submit
     const handleSubmit = (e) => {
         e.preventDefault()
-        console.log(
-            productName,
-            productPrice,
-            productCategory,
-            productDescription,
-            productImage
-        )
+
+        // make a form data (txt, file)
+        const formData = new FormData()
+        formData.append('productName', productName)
+        formData.append('productPrice', productPrice)
+        formData.append('productCategory', productCategory)
+        formData.append('productDescription', productDescription)
+        formData.append('productImage', productImage)
+
+        // make a api call
+        createProductApi(formData).then((res) => {
+            // For successful api
+            if (res.status === 201) {
+                toast.success(res.data.message)
+            }
+
+
+        }).catch((error) => {
+            // for error status code
+
+            if (error.response) {
+
+                if (error.response.status === 400) {
+                    toast.warning(error.response.data.message)
+                } else if (error.response.status === 500) {
+                    toast.error(error.response.data.message)
+                } else {
+                    toast.error("Something went wrong!")
+                }
+
+            } else {
+                toast.error("Something went wrong!")
+            }
+
+        })
+
+
     }
 
     return (
@@ -39,12 +93,12 @@ const AdminDashboard = () => {
                 <div className='d-flex justify-content-between'>
                     <h3>Admin Dashboard</h3>
 
-                    
+
                     <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
                         Add Product
                     </button>
 
-                    
+
                     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
@@ -108,21 +162,27 @@ const AdminDashboard = () => {
                     </thead>
 
                     <tbody>
-                        <tr>
-                            <td>
-                                <img width={'40px'} height={'40px'} src="https://th.bing.com/th/id/OIP.Vtxy0FjT_EfudI4cQk1kzAHaE8?w=296&h=198&c=7&r=0&o=5&dpr=1.3&pid=1.7" alt="" />
-                            </td>
-                            <td>Flower</td>
-                            <td>200</td>
-                            <td>Indoor</td>
-                            <td>Beautiful Flower</td>
 
-                            <td>
-                                <button className='btn btn-primary'>Edit</button>
-                                <button className='btn btn-danger ms-2'>Delete</button>
-                            </td>
+                        {
+                            products.map((singleProduct) => (
+                                <tr>
+                                    <td>
+                                        <img width={'40px'} height={'40px'} src={`http://localhost:5000/products/${singleProduct.productImage}`} alt="" />
+                                    </td>
+                                    <td>{singleProduct.productName}</td>
+                                    <td>{singleProduct.productPrice}</td>
+                                    <td>{singleProduct.productCategory}</td>
+                                    <td>{singleProduct.productDescription}</td>
 
-                        </tr>
+                                    <td>
+                                        <button className='btn btn-primary'>Edit</button>
+                                        <button className='btn btn-danger ms-2'>Delete</button>
+                                    </td>
+
+                                </tr>
+                            ))
+                        }
+
                     </tbody>
 
                 </table>
@@ -134,3 +194,5 @@ const AdminDashboard = () => {
 }
 
 export default AdminDashboard
+
+// Edit product
