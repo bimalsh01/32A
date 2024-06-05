@@ -92,15 +92,46 @@ const getAllProducts =  async (req,res) => {
             "error" : error
         })
     }
-    // fetch all products
-    // send response
+}
+
+// fetch single product
+const getSingleProduct = async(req,res) => {
+
+    // get product id from url (params)
+    const productId = req.params.id;
+
+    // find
+    try {
+        const product = await productModel.findById(productId)
+        if(!product){
+            res.status(400).json({
+                "success" : false,
+                "message" : "No Product Found!",
+            })
+        }
+
+        res.status(201).json({
+            "success" : true,
+            "message" : "Product Fetched!",
+            "product" : product
+        })
+        
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({
+            "success" : false,
+            "message" : "Internal server error",
+            "error" : error
+        })
+    }
 
 }
 
 
 module.exports = {
     createProduct,
-    getAllProducts
+    getAllProducts,
+    getSingleProduct
 };
 
 
