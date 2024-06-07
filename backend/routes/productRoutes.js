@@ -9,4 +9,7 @@ router.get('/get_all_products', productController.getAllProducts)
 // single product
 router.get('/get_single_product/:id', productController.getSingleProduct)
 
+// delete product
+router.delete('/delete_product/:id', productController.deleteProduct)
+
 module.exports = router

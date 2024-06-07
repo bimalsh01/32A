@@ -127,11 +127,31 @@ const getSingleProduct = async(req,res) => {
 
 }
 
+// delete product
+const deleteProduct = async(req,res) => {
+    try {
+        await productModel.findByIdAndDelete(req.params.id)
+        res.status(201).json({
+            "success" : true,
+            "message" : "Product Deleted successfully!",
+        })
+        
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({
+            "success" : false,
+            "message" : "Internal server error",
+            "error" : error
+        })
+    }
+}
+
 
 module.exports = {
     createProduct,
     getAllProducts,
-    getSingleProduct
+    getSingleProduct,
+    deleteProduct
 };
 
 

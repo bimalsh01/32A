@@ -24,6 +24,12 @@ export const createProductApi = (data) => Api.post('/api/product/create', data)
 // get all products api
 export const getAllProducts = () => Api.get('/api/product/get_all_products')
 
+// get single product (Task)
+export const getSingleProduct = (id) => Api.get(`/api/product/get_single_product/${id}`)
+
+// delete
+export const deleteProduct = (id) => Api.delete(`/api/product/delete_product/${id}`)
+
 // http://localhost:5000/test
 
 // products : [{product1:name,price}, {product2:name,price}]
