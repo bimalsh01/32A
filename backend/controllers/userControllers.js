@@ -113,7 +113,7 @@ const loginUser =  async (req,res) => {
         // token (Generate - user Data + KEY)
         const token = await jwt.sign(
             {id : user._id},
-            process.env.JWT_SECRET
+            'SECRETKEY'
         )
 
         // response (token, user data)
