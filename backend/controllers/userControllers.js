@@ -112,7 +112,7 @@ const loginUser =  async (req,res) => {
 
         // token (Generate - user Data + KEY)
         const token = await jwt.sign(
-            {id : user._id},
+            {id : user._id, isAdmin : user.isAdmin},
             'SECRETKEY'
         )
 
@@ -140,3 +140,13 @@ module.exports = {
     createUser,
     loginUser
 }
+
+
+
+
+// Improper SPRINT - 1
+
+// Avishek Sah
+// Abhay Pratap Sah
+// Krishna Shah
+// Rajiv Mahat

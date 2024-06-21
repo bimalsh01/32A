@@ -14,6 +14,10 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import AdminDashboard from './pages/admin/admin_dashboard/AdminDashboard';
 import UpdateProduct from './pages/admin/update_product/UpdateProduct';
+import AdminRoutes from './protected_routes/AdminRoutes';
+import UserRoutes from './protected_routes/UserRoutes';
+import Profile from './pages/profile/Profile';
+import Test from './pages/Test';
 
 // Task create for login and register
 function App() {
@@ -25,10 +29,23 @@ function App() {
         <Route path='/' element={<Homepage/>} />
         <Route path='/register' element={<Register/>} />
         <Route path='/login' element={<Login/>} />
+        <Route path='/test' element={<Test/>} />
+
 
         {/* Admin routes */}
-        <Route path='/admin/dashboard' element={<AdminDashboard/>} />
-        <Route path='/admin/update/:id' element={<UpdateProduct/>} />
+        <Route element={<AdminRoutes/>}>
+           <Route path='/admin/dashboard' element={<AdminDashboard/>} />
+           <Route path='/admin/update/:id' element={<UpdateProduct/>} />
+        </Route>
+
+        
+
+        {/* User Routes */}
+        <Route element={<UserRoutes/>}>
+
+          <Route path='/profile' element={<Profile/>}/>
+
+        </Route>
 
       </Routes>
     </Router>
