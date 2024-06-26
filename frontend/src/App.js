@@ -17,7 +17,7 @@ import UpdateProduct from './pages/admin/update_product/UpdateProduct';
 import AdminRoutes from './protected_routes/AdminRoutes';
 import UserRoutes from './protected_routes/UserRoutes';
 import Profile from './pages/profile/Profile';
-import Test from './pages/Test';
+import ForgotPassword from './pages/forgot_password/ForgotPassword';
 
 // Task create for login and register
 function App() {
@@ -29,7 +29,6 @@ function App() {
         <Route path='/' element={<Homepage/>} />
         <Route path='/register' element={<Register/>} />
         <Route path='/login' element={<Login/>} />
-        <Route path='/test' element={<Test/>} />
 
 
         {/* Admin routes */}
@@ -46,6 +45,8 @@ function App() {
           <Route path='/profile' element={<Profile/>}/>
 
         </Route>
+
+        <Route path='/forgot_password' element={<ForgotPassword/>} />
 
       </Routes>
     </Router>

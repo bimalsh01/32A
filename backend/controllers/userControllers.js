@@ -1,16 +1,17 @@
 const userModel = require('../models/userModel')
 const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
+const sendOtp = require('../service/sendOtp');
 
 const createUser = async (req,res) => {
     // 1. Check incomming data
     console.log(req.body);
 
     // 2. Destructure the incomming data
-    const {firstName, lastName, email, password} = req.body;
+    const {firstName, lastName, email, password, phone} = req.body;
 
     // 3. Validate the data (if empty, stop the process and send res)
-    if(!firstName || !lastName || !email || !password){
+    if(!firstName || !lastName || !email || !password || !phone){
         // res.send("Please enter all fields!")
         return res.json({
             "success" : false,
@@ -41,7 +42,8 @@ const createUser = async (req,res) => {
             firstName : firstName,
             lastName : lastName,
             email : email,
-            password : hashedPassword
+            password : hashedPassword,
+            phone : phone
         })
 
         // Save to database
@@ -134,11 +136,69 @@ const loginUser =  async (req,res) => {
     
 }
 
+// Forgot password by using phone number
+const forgotPassword = async (req,res) => {
+    const {phone} = req.body;
+
+    if(!phone){
+        return res.status(400).json({
+            'success' : false,
+            'message' : 'Provide your phone number!'
+        })
+    }
+
+    try {
+
+        // finding user
+        const user = await userModel.findOne({phone : phone})
+        if(!user){
+            return res.status(400).json({
+                'success' : false,
+                'message' : 'User Not Found!'
+            })
+        }
+
+        // generate random 6 digit otp
+        const otp = Math.floor(100000 + Math.random() * 900000)
+
+        // generate expiry date
+        const expiryDate = Date.now() + 360000;
+
+        // save to database for verification
+        user.resetPasswordOTP = otp;
+        user.resetPasswordExpires = expiryDate;
+        await user.save();
+
+        // send to registered phone number
+        const isSent = await sendOtp(phone, otp)
+        if(!isSent){
+            return res.status(400).json({
+                'success' : false,
+                'message' : 'Error Sending OTP Code!'
+            })
+        }
+
+        // if success
+        res.status(200).json({
+            'success' : true,
+            'message' : 'OTP Send Successfully!'
+        })
+        
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({
+            'success' : false,
+            'message' : 'Server Error!'
+        })
+    }
+}
+
 
 // exporting
 module.exports = {
     createUser,
-    loginUser
+    loginUser,
+    forgotPassword
 }
 
 

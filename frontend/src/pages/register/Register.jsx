@@ -10,6 +10,7 @@ const Register = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
+  const [phone, setPhone] = useState('') // Added
 
   // Use State for Error Message
   const [firstNameError, setFirstNameError] = useState('')
@@ -17,6 +18,7 @@ const Register = () => {
   const [emailError, setEmailError] = useState('')
   const [passwordError, setPasswordError] = useState('')
   const [confirmPasswordError, setConfirmPasswordError] = useState('')
+  const [phoneError, setPhoneError] = useState('') // Added
 
   // Make a each function for changing the value
   const handleFirstname = (e) => {
@@ -38,38 +40,47 @@ const Register = () => {
   const handleConfirmPassword = (e) => {
     setConfirmPassword(e.target.value);
   }
-  
+
+  const handlePhone = (e) => {
+    setPhone(e.target.value);
+  }
+
   // validation
   var validate = () => {
     var isValid = true;
 
     // validate the firstname
-    if(firstName.trim() === ''){
+    if (firstName.trim() === '') {
       setFirstNameError("Firstname is Required!")
       isValid = false
     }
 
-    if(lastName.trim() === ''){
+    if (lastName.trim() === '') {
       setLastNameError("Lastname is Required!")
       isValid = false
     }
 
-    if(email.trim() === ''){
+    if (email.trim() === '') {
       setEmailError("Email is Required!")
       isValid = false
     }
 
-    if(password.trim() === ''){
+    if (phone.trim() === '') {
+      setPhoneError("Phone Number is Required!")
+      isValid = false
+    }
+
+    if (password.trim() === '') {
       setPasswordError("Password is Required!")
       isValid = false
     }
 
-    if(confirmPassword.trim() === ''){
+    if (confirmPassword.trim() === '') {
       setConfirmPasswordError("Confirm Password is Required!")
       isValid = false
     }
 
-    if(confirmPassword.trim()  !== password.trim()){
+    if (confirmPassword.trim() !== password.trim()) {
       setConfirmPasswordError("Password and Confirm Password doesn't match!")
       isValid = false;
     }
@@ -84,7 +95,7 @@ const Register = () => {
 
     // validate
     var isValidated = validate();
-    if(!isValidated){
+    if (!isValidated) {
       return
     }
 
@@ -92,24 +103,25 @@ const Register = () => {
 
     // Making json object
     const data = {
-      "firstName" : firstName,
-      "lastName" : lastName,
-      "email" : email,
-      "password" : password
+      "firstName": firstName,
+      "lastName": lastName,
+      "email": email,
+      "password": password,
+      "phone": phone, // Added
     }
 
     registerUserApi(data).then((res) => {
-      
+
       //  Received data : success, message
-      if(res.data.success === false){
+      if (res.data.success === false) {
         toast.error(res.data.message)
-      } else{
+      } else {
         toast.success(res.data.message)
       }
 
     })
 
-    
+
   }
 
   return (
@@ -122,35 +134,40 @@ const Register = () => {
           <input onChange={handleFirstname} type="text" className='form-control' placeholder='Enter your firstname' />
 
           {
-             firstNameError && <p className='text-danger'>{firstNameError}</p>
+            firstNameError && <p className='text-danger'>{firstNameError}</p>
           }
 
           <label className='mt-2'>Lastname</label>
           <input onChange={handleLastname} type="text" className='form-control' placeholder='Enter your lastname' />
 
           {
-             lastNameError && <p className='text-danger'>{lastNameError}</p>
+            lastNameError && <p className='text-danger'>{lastNameError}</p>
           }
 
           <label className='mt-2'>Email</label>
           <input onChange={handleEmail} type="text" className='form-control' placeholder='Enter your email' />
-
           {
-             emailError && <p className='text-danger'>{emailError}</p>
+            emailError && <p className='text-danger'>{emailError}</p>
+          }
+
+          <label className='mt-2'>Phone Number</label>
+          <input onChange={handlePhone} type="number" className='form-control' placeholder='Enter your phone number' />
+          {
+            phoneError && <p className='text-danger'>{phoneError}</p>
           }
 
           <label className='mt-2'>Password</label>
           <input onChange={handlePassword} type="text" className='form-control' placeholder='Enter your password' />
-          
+
           {
-             passwordError && <p className='text-danger'>{passwordError}</p>
+            passwordError && <p className='text-danger'>{passwordError}</p>
           }
 
           <label className='mt-2'>Confirm Password</label>
           <input onChange={handleConfirmPassword} type="text" className='form-control' placeholder='Enter your confirm password' />
-          
+
           {
-             confirmPasswordError && <p className='text-danger'>{confirmPasswordError}</p>
+            confirmPasswordError && <p className='text-danger'>{confirmPasswordError}</p>
           }
 
           <button onClick={handleSubmit} className='btn btn-dark mt-2 w-100'>Create an Account!</button>
