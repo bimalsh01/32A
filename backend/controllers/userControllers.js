@@ -193,12 +193,69 @@ const forgotPassword = async (req,res) => {
     }
 }
 
+// Verify otp and set new password
+const verifyOtpAndSetPassword = async (req,res) => {
+
+    // get data
+    const {phone, otp, newPassword} = req.body;
+    if(!phone || !otp || !newPassword){
+        return res.status(400).json({
+            'success': false,
+            'message' : 'Required fields are missing!'
+        })
+    }
+
+    try {
+        const user = await userModel.findOne({phone : phone})
+
+        // Verify otp
+        if(user.resetPasswordOTP != otp){
+            return res.status(400).json({
+                'success': false,
+                'message' : 'Invalid OTP!'
+            }) 
+        }
+
+        if(user.resetPasswordExpires < Date.now()){
+            return res.status(400).json({
+                'success': false,
+                'message' : 'OTP Expired!'
+            }) 
+        }
+
+        // password hash
+        // Hashing/Encryption of the password
+        const randomSalt = await bcrypt.genSalt(10)
+        const hashedPassword = await bcrypt.hash(newPassword,randomSalt)
+
+        // update to databse
+        user.password = hashedPassword;
+        await user.save()
+
+        // response
+        res.status(200).json({
+            'success' : true,
+            'message' : 'OTP Verified and Password Updated!'
+        })
+
+        
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({
+            'success': false,
+            'message' : 'Server Error!'
+        }) 
+    }
+
+}
+
 
 // exporting
 module.exports = {
     createUser,
     loginUser,
-    forgotPassword
+    forgotPassword,
+    verifyOtpAndSetPassword
 }
 
 

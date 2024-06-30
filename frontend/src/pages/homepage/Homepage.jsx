@@ -72,7 +72,9 @@ const Homepage = () => {
 
                     {
                         products.map((singleProduct) => (
-                            <div class="col">
+                            <div class="col" 
+                            key={singleProduct._id}
+                            >
                                 <ProductCard productInformation={singleProduct} color={'green'} />
                             </div>
                         ))

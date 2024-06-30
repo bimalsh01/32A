@@ -41,6 +41,12 @@ export const deleteProduct = (id) => Api.delete(`/api/product/delete_product/${i
 // update product
 export const updateProduct = (id, data) => Api.put(`/api/product/update_product/${id}`, data, config)
 
+// forgot password
+export const forgotPasswordApi = (data) => Api.post('/api/user/forgot_password', data)
+
+// verify otp
+export const verifyOtpApi = (data) => Api.post('/api/user/verify_otp', data)
+
 // http://localhost:5000/test
 
 // products : [{product1:name,price}, {product2:name,price}]
